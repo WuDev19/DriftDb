@@ -1,17 +1,17 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'UserDao.dart';
+part of 'ProductDao.dart';
 
 // ignore_for_file: type=lint
-mixin _$UserDaoMixin on DatabaseAccessor<AppDatabase> {
+mixin _$ProductDaoMixin on DatabaseAccessor<AppDatabase> {
   $UserTable get user => attachedDatabase.user;
   $ProductTable get product => attachedDatabase.product;
-  UserDaoManager get managers => UserDaoManager(this);
+  ProductDaoManager get managers => ProductDaoManager(this);
 }
 
-class UserDaoManager {
-  final _$UserDaoMixin _db;
-  UserDaoManager(this._db);
+class ProductDaoManager {
+  final _$ProductDaoMixin _db;
+  ProductDaoManager(this._db);
   $$UserTableTableManager get user =>
       $$UserTableTableManager(_db.attachedDatabase, _db.user);
   $$ProductTableTableManager get product =>

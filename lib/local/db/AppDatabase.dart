@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
+import '../dao/ProductDao.dart';
 import '../dao/UserDao.dart';
 import '../entity/Product.dart';
 import '../entity/User.dart';
@@ -7,7 +8,7 @@ import 'package:path_provider/path_provider.dart';
 
 part 'AppDatabase.g.dart';
 
-@DriftDatabase(tables: [User, Product], daos: [UserDao])
+@DriftDatabase(tables: [User, Product], daos: [UserDao, ProductDao])
 class AppDatabase extends _$AppDatabase {
   //giống room khi khởi tạo db
   AppDatabase([QueryExecutor? executor])

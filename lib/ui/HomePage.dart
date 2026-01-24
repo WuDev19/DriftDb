@@ -12,7 +12,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final list = [];
+  List list = <UserData>[];
   final idController = TextEditingController();
   final tenController = TextEditingController();
   final ageController = TextEditingController();
@@ -137,7 +137,14 @@ class _HomePageState extends State<HomePage> {
                   child: Text("Delete", style: TextStyle(color: Colors.white)),
                 ),
                 ElevatedButton(
-                  onPressed: () async {},
+                  onPressed: () async {
+                    final result = await db.userDao.findUserByName(
+                      tenController.text,
+                    );
+                    setState(() {
+                      list = result;
+                    });
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.greenAccent,
                   ),
@@ -148,7 +155,15 @@ class _HomePageState extends State<HomePage> {
           ),
           SizedBox(height: 20),
           ElevatedButton(
-            onPressed: () async {},
+            onPressed: () async {
+              db.userDao
+                  .findUserAgeBiggerThan10(int.parse(idController.text.trim()))
+                  .then((value) {
+                    setState(() {
+                      list = value;
+                    });
+                  });
+            },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.greenAccent,
             ),
@@ -157,11 +172,13 @@ class _HomePageState extends State<HomePage> {
           SizedBox(height: 20),
           ElevatedButton(
             onPressed: () async {
-              final result = await db.userDao.putUser(UserCompanion(
-                userId: Value(1),
-                name: Value(tenController.text.trim()),
-                age: Value(int.parse(ageController.text.trim()))
-              ));
+              final result = await db.userDao.putUser(
+                UserCompanion(
+                  userId: Value(1),
+                  name: Value(tenController.text.trim()),
+                  age: Value(int.parse(ageController.text.trim())),
+                ),
+              );
               logger.i(result);
             },
             style: ElevatedButton.styleFrom(
@@ -185,12 +202,13 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           SizedBox(height: 20),
-          SizedBox(
+          Container(
+            color: Colors.tealAccent,
             height: 300,
             child: ListView.builder(
               itemCount: list.length,
               itemBuilder: (context, index) {
-                final ps = list.elementAt(index);
+                final UserData ps = list.elementAt(index);
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
@@ -205,7 +223,7 @@ class _HomePageState extends State<HomePage> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            ps.id.toString(),
+                            ps.userId.toString(),
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
