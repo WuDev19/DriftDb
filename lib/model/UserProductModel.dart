@@ -9,4 +9,8 @@ class UserProductModel {
     required this.number,
   });
 
+  @override
+  String toString() {
+    return 'UserProductModel{name: $name, des: $des, number: $number}';
+  }
 }

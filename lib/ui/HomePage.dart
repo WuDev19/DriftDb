@@ -1,8 +1,10 @@
+import 'package:drift_database/local/dao/UserDao.dart';
 import 'package:drift_database/local/db/AppDatabase.dart';
 import 'package:drift_database/main.dart';
 import 'package:drift_database/ui/ProductPage.dart';
 import 'package:flutter/material.dart';
 import 'package:drift/drift.dart' hide Column;
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -17,10 +19,9 @@ class _HomePageState extends State<HomePage> {
   final tenController = TextEditingController();
   final ageController = TextEditingController();
   final huyenController = TextEditingController();
-  final db = AppDatabase();
-
   @override
   Widget build(BuildContext context) {
+    final userDao = context.read<UserDao>();
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -103,7 +104,7 @@ class _HomePageState extends State<HomePage> {
               children: [
                 ElevatedButton(
                   onPressed: () async {
-                    final result = await db.userDao.insertUser(
+                    final result = await userDao.insertUser(
                       UserCompanion(
                         age: Value(int.parse(ageController.text.trim())),
                         name: Value(tenController.text.trim()),
@@ -118,7 +119,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 ElevatedButton(
                   onPressed: () async {
-                    final result = await db.userDao.patchUser(
+                    final result = await userDao.patchUser(
                       int.parse(ageController.text.trim()),
                       tenController.text,
                     );
@@ -138,7 +139,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 ElevatedButton(
                   onPressed: () async {
-                    final result = await db.userDao.findUserByName(
+                    final result = await userDao.findUserByName(
                       tenController.text,
                     );
                     setState(() {
@@ -156,7 +157,7 @@ class _HomePageState extends State<HomePage> {
           SizedBox(height: 20),
           ElevatedButton(
             onPressed: () async {
-              db.userDao
+              userDao
                   .findUserAgeBiggerThan10(int.parse(idController.text.trim()))
                   .then((value) {
                     setState(() {
@@ -172,7 +173,7 @@ class _HomePageState extends State<HomePage> {
           SizedBox(height: 20),
           ElevatedButton(
             onPressed: () async {
-              final result = await db.userDao.putUser(
+              final result = await userDao.putUser(
                 UserCompanion(
                   userId: Value(1),
                   name: Value(tenController.text.trim()),
