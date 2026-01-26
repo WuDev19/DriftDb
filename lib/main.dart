@@ -1,5 +1,5 @@
 import 'package:drift_database/state-management/ProductCubit.dart';
-import 'package:drift_database/ui/HomePage.dart';
+import 'package:drift_database/ui/routes/AppRouter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
@@ -34,14 +34,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text("Demo Drift"),
-          backgroundColor: Colors.lightGreen,
-        ),
-        body: const HomePage(),
+    return MaterialApp.router(
+      routerConfig: AppRouter.router,
+      builder: (context, child) => Stack(
+        children: [
+          child!,
+          AppRouter.isLoading
+              ? Center(child: CircularProgressIndicator())
+              : SizedBox(),
+        ],
       ),
       debugShowCheckedModeBanner: false,
     );
