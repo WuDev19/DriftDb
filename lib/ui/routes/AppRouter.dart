@@ -1,4 +1,5 @@
 import 'package:drift_database/main.dart';
+import 'package:drift_database/ui/ProductDetail.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 
@@ -30,6 +31,15 @@ class AppRouter {
                 },
           );
         },
+        routes: [
+          GoRoute(
+            path: ':id',
+            builder: (context, state) {
+              int productID = int.parse(state.pathParameters['id']!);
+              return ProductDetail(productId: productID);
+            },
+          ),
+        ],
       ),
     ],
   );

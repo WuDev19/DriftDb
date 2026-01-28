@@ -7,6 +7,7 @@ import 'package:drift_database/state-management/ProductCubit.dart';
 import 'package:drift_database/state-management/ProductProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class ProductPage extends StatefulWidget {
@@ -24,14 +25,14 @@ class _ProductPageState extends State<ProductPage> {
 
   @override
   Widget build(BuildContext context) {
-    logger.i("build ngoai");
+    logger.i("build ngoai $context");
     final productDao = context.read<ProductDao>();
     return ChangeNotifierProvider(
       create: (BuildContext context) {
         return ProductProvider(context.read<ProductDao>());
       },
-      builder: (context, child) {
-        logger.i("build trong builder va $child");
+      builder: (context1, child) { //context1 đã nằm dưới provider nên có thể dùng read và watch với context1 được mà ko báo lỗi
+        logger.i("build trong builder va $context1");
         return Scaffold(
           appBar: AppBar(
             title: Text("Product"),
@@ -199,10 +200,13 @@ class _ProductPageState extends State<ProductPage> {
                         //         list = value;
                         //       });
                         //     });
-                        context.read<ProductProvider>().getUserProduct(
+                        logger.i(context1.hashCode);
+                        logger.i(context.hashCode);
+                        context1.read<ProductCubit>().add(); //context hay context1 đều được vì context dưới có thể dùng được hết những gì context trên có
+                        //nhưng context trên sẽ ko dùng được những cái mới của context dưới
+                        context1.read<ProductProvider>().getUserProduct(
                           int.parse(userIdController.text.trim()),
                         );
-                        context.read<ProductCubit>().add();
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.greenAccent,
@@ -211,6 +215,17 @@ class _ProductPageState extends State<ProductPage> {
                     ),
                   ],
                 ),
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () async {
+                  int productId = int.parse(productIdController.text.trim());
+                  context.push('/product/$productId');
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.greenAccent,
+                ),
+                child: Text("Get Detail", style: TextStyle(color: Colors.white)),
               ),
               SizedBox(height: 20),
               FutureProvider<String>(
@@ -289,7 +304,7 @@ class _ProductPageState extends State<ProductPage> {
                   padding: EdgeInsets.all(10),
                   color: Colors.red,
                   height: 100,
-                  child: Text("hihi"),
+                  child: Text(context1.watch<ProductProvider>().list.toString()),
                 ),
               ),
               Selector<ProductProvider, int>(
@@ -307,7 +322,7 @@ class _ProductPageState extends State<ProductPage> {
           floatingActionButton: FloatingActionButton(
             child: Icon(Icons.add),
             onPressed: () {
-              context.read<ProductProvider>().addToList(1);
+              context1.read<ProductProvider>().addToList(1);
             },
           ),
         );

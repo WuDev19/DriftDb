@@ -30,4 +30,9 @@ class ProductDao extends DatabaseAccessor<AppDatabase> with _$ProductDaoMixin {
     }).toList();
   }
 
+  Future getProductDetail(int productId) async {
+    return (select(
+      product,
+    )..where((tbl) => tbl.productId.equals(productId))).getSingleOrNull();
+  }
 }
